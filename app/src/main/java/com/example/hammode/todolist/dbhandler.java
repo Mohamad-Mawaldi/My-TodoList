@@ -14,6 +14,7 @@ import java.util.UUID;
 public class dbhandler extends AppCompatActivity {
     FirebaseFirestore db;
     protected void Loader() {
+        SharedList.list.clear();
         com.google.android.gms.tasks.Task<QuerySnapshot> querySnapshotTask = db.collection("Todo").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -32,7 +33,7 @@ public class dbhandler extends AppCompatActivity {
 
     }
     protected void add (String title , String description){
-        String Id = "1";
+        String Id = UUID.randomUUID ().toString ();
         HashMap<String,Object> todo = new HashMap<>();
         todo.put("Id",Id);
         todo.put("title" ,title);
