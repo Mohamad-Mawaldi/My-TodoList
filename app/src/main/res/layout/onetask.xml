@@ -9,14 +9,16 @@
         android:id="@+id/Stitlein"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:textColor="#607D8B" />
+        android:textColor="#607D8B"
+        android:textSize="30dp"/>
 
     <TextView
         android:hint="description"
         android:id="@+id/Sdescriptionin"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:textColor="#607D8B" />
+        android:textColor="#607D8B"
+        android:textSize="30dp"/>
 
 
 </LinearLayout>

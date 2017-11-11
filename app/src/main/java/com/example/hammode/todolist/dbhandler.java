@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,13 +33,24 @@ public class dbhandler extends AppCompatActivity {
                 });
 
     }
-    protected void add (String title , String description){
+    protected void add (String Title , String description){
         String Id = UUID.randomUUID ().toString ();
         HashMap<String,Object> todo = new HashMap<>();
         todo.put("Id",Id);
-        todo.put("title" ,title);
+        todo.put("Title" ,Title);
         todo.put("description" ,description);
         db.collection("Todo").document(Id).set(todo);
     }
+    protected void Delete (int order){
+        db.collection ( "Todo" ).document (SharedList.list.get ( order ).getId ()).
+                delete ();
+            }
+
+
+
+
+
 
     }
+
+

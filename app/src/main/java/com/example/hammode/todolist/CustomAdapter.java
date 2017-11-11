@@ -28,6 +28,5 @@ public class CustomAdapter extends ArrayAdapter<Task> {
             TextView Sdescriptionin = (TextView)row.findViewById(R.id.Sdescriptionin);
             Sdescriptionin.setText(SharedList.list.get(position).getDescription ());
             return row;
-
     }
 }
