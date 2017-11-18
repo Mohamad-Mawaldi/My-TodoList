@@ -25,7 +25,6 @@ public class MainActivity extends dbhandler {
    private EditText title,description;
    private Button done,cancel;
    private TextView head;
-   private String[] arr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +38,10 @@ public class MainActivity extends dbhandler {
          fab= (FloatingActionButton)findViewById(R.id.fab);
           db = FirebaseFirestore.getInstance();
         adapter = new CustomAdapter(MainActivity.this);
-        arr= new String[2];
         listo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         Loader();
+        listo.invalidateViews();
          registerForContextMenu ( listo );
          fab.setOnClickListener(new OnClickListener() {
             @Override
@@ -60,8 +59,9 @@ public class MainActivity extends dbhandler {
                     @Override
                     public void onClick(View v) {
                         String stringTitle = title.getText ().toString ();
-                        String stringdescription = description.getText ().toString ();
-                        add (stringTitle,stringdescription);
+                        String stringDescription = description.getText ().toString ();
+                        add (stringTitle,stringDescription);
+                        adapter.notifyDataSetChanged();
                         dialog.dismiss ();
                     }
 
@@ -102,13 +102,15 @@ public class MainActivity extends dbhandler {
     public boolean onContextItemSelected(final MenuItem item) {
         super.onContextItemSelected ( item );
         if (item.getTitle ().equals ( "Done" ))
-            Delete ( item.getOrder () );
+        Delete ( item.getOrder () );
         else {
             final Dialog dialog = new Dialog ( MainActivity.this );
             dialog.setContentView ( R.layout.dialog );
             dialog.show ();
             title = ( EditText ) dialog.findViewById ( R.id.title );
             description = ( EditText ) dialog.findViewById ( R.id.description );
+            title.setText ( SharedList.list.get ( item.getOrder () ).getTitle () );
+            description.setText ( SharedList.list.get ( item.getOrder () ).getDescription () );
             head = ( TextView ) dialog.findViewById ( R.id.head );
             head.setText ( "Update!" );
             done = ( Button ) dialog.findViewById ( R.id.done );
@@ -119,7 +121,10 @@ public class MainActivity extends dbhandler {
                     String stringTitle = title.getText ().toString ();
                     String stringdescription = description.getText ().toString ();
                     db.collection ( "Todo" ).document (SharedList.list.get ( item.getOrder () ).getId ())
-                            .update (  )
+                            .update ( "Title",stringTitle, "description",stringdescription );
+                    Loader ();
+                    title.setText ( null );
+                    description.setText ( null );
                     dialog.dismiss ();
                 }
 
@@ -139,8 +144,7 @@ public class MainActivity extends dbhandler {
     @Override
     protected void Loader() {
         super.Loader();
-        adapter.notifyDataSetChanged();
-        //adapter.notify ();
+        adapter.notifyDataSetChanged ();
     }
     protected void Delete(int order){
         super.Delete ( order );
