@@ -3,19 +3,16 @@ package com.example.hammode.todolist;
 import android.app.Dialog;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.Collections;
 import static android.view.View.*;
 
 public class MainActivity extends dbhandler {
@@ -23,43 +20,37 @@ public class MainActivity extends dbhandler {
    private ListView listo ;
    private FloatingActionButton fab ;
    private CustomAdapter adapter ;
-   private EditText title,description,search;
-   private Button done,cancel;
+   private EditText title,description;
+   private Button done,cancel,sort;
    private TextView head;
+   private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         adapter = new CustomAdapter(MainActivity.this);
-         listo = (ListView)findViewById(R.id.listview);
-         fab= (FloatingActionButton)findViewById(R.id.fab);
-          db = FirebaseFirestore.getInstance();
+
+        listo = (ListView)findViewById(R.id.listview);
+        fab= (FloatingActionButton)findViewById(R.id.fab);
         adapter = new CustomAdapter(MainActivity.this);
-        search = (EditText)findViewById ( R.id.search );
-        search.addTextChangedListener ( new TextWatcher () {
+        listo.setAdapter (adapter);
+        db = FirebaseFirestore.getInstance();
+        Loader();
+        searchView = (SearchView)findViewById (R.id.search );
+        searchView.setOnQueryTextListener ( new SearchView.OnQueryTextListener () {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                (MainActivity.this).adapter.getFilter ().filter ( s );
-                adapter.notifyDataSetChanged ();
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public boolean onQueryTextChange(String newText) {
+                Loader ();
+                adapter.getFilter ().filter ( newText );
+                return true;
             }
         } );
-        listo.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        Loader();
-        listo.invalidateViews();
-         registerForContextMenu ( listo );
+        registerForContextMenu ( listo );
          fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +69,6 @@ public class MainActivity extends dbhandler {
                         String stringTitle = title.getText ().toString ();
                         String stringDescription = description.getText ().toString ();
                         add (stringTitle,stringDescription);
-                        adapter.notifyDataSetChanged();
                         dialog.dismiss ();
                     }
 
@@ -89,6 +79,16 @@ public class MainActivity extends dbhandler {
                         dialog.dismiss ();
                     }
                 } );}});
+         sort = (Button) findViewById ( R.id.sort );
+         sort.setOnClickListener ( new OnClickListener () {
+             @Override
+             public void onClick(View v) {
+                 SortByTitle ();
+
+             }
+         } );
+
+
     }
 
     @Override
@@ -109,8 +109,6 @@ public class MainActivity extends dbhandler {
             dialog.show ();
             title = ( EditText ) dialog.findViewById ( R.id.title );
             description = ( EditText ) dialog.findViewById ( R.id.description );
-            //title.setText ( SharedList.list.get ( item.getOrder () ).getTitle () );
-            //description.setText ( SharedList.list.get ( item.getOrder () ).getDescription () );
             head = ( TextView ) dialog.findViewById ( R.id.head );
             head.setText ( "Update!" );
             done = ( Button ) dialog.findViewById ( R.id.done );
@@ -155,6 +153,14 @@ public class MainActivity extends dbhandler {
         super.add ( Title, description );
         Loader ();
     }
+    protected void SortByTitle (){
+        Loader ();
+        Collections.sort( SharedList.list, TitleComparator);
+        adapter.notifyDataSetChanged ();
+
+
+    }
+
 }
 
 

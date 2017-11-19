@@ -11,6 +11,11 @@
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sort"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -28,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_input_add" />
 
-        <EditText
+        <android.support.v7.widget.SearchView
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,6 +47,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </TableRow>
 
      <ListView

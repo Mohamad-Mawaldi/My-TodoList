@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -44,12 +46,39 @@ public class dbhandler extends AppCompatActivity {
         db.collection ( "Todo" ).document (SharedList.list.get ( order ).getId ()).
                 delete ();
             }
+    public static Comparator<Task> TitleComparator = new Comparator<Task> () {
+
+        public int compare(Task t1, Task t2) {
+            String Title1 = t1.getTitle ().toUpperCase ();
+            String Title2 = t2.getTitle ().toUpperCase ();
+            return Title1.compareTo ( Title2 );}
+
+    };
+
+    public static Comparator<Task> DescriptionComparator = new Comparator<Task> () {
+
+        public int compare(Task t1, Task t2) {
+            String Description1 = t1.getDescription ().toUpperCase ();
+            String Description2 = t2.getDescription ().toUpperCase ();
+
+            return Description1.compareTo ( Description2 );
+        }
+    };
 
 
 
 
 
 
-    }
+
+
+            }
+
+
+
+
+
+
+
 
 
