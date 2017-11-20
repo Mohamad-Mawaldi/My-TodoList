@@ -36,13 +36,13 @@ public class MainActivity extends dbhandler {
         listo.setAdapter (adapter);
         db = FirebaseFirestore.getInstance();
         Loader();
+        //Trying to creat a search bar
         searchView = (SearchView)findViewById (R.id.search );
         searchView.setOnQueryTextListener ( new SearchView.OnQueryTextListener () {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 Loader ();
@@ -51,6 +51,7 @@ public class MainActivity extends dbhandler {
             }
         } );
         registerForContextMenu ( listo );
+        //The button can generate a "Dialog" in order to add a new task
          fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,11 +100,13 @@ public class MainActivity extends dbhandler {
     }
 
     @Override
+    //Defining the functionality for every "Context" option
     public boolean onContextItemSelected(final MenuItem item) {
         super.onContextItemSelected ( item );
         if (item.getTitle ().equals ( "Done" ))
         Delete ( item.getOrder () );
         else {
+            //A Dialog to update the task
             final Dialog dialog = new Dialog ( MainActivity.this );
             dialog.setContentView ( R.layout.dialog );
             dialog.show ();
@@ -121,8 +124,6 @@ public class MainActivity extends dbhandler {
                     db.collection ( "Todo" ).document (SharedList.list.get ( item.getOrder () ).getId ())
                             .update ( "Title",stringTitle, "description",stringdescription );
                     Loader ();
-                    title.setText ( null );
-                    description.setText ( null );
                     dialog.dismiss ();
                 }
 
@@ -138,7 +139,10 @@ public class MainActivity extends dbhandler {
         return true;}
 
 
-
+/*
+* Override Loader in order to notify the adapter of the changes.
+* Override other methods to use loader every time the user add or change something.
+* */
     @Override
     protected void Loader() {
         super.Loader();

@@ -9,9 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
+
+// Custom Adapter to display an Array of objects. I wanted to display title and Description and maybe rating
 
 public class CustomAdapter extends ArrayAdapter<Task> implements Filterable {
     private Context con;
@@ -20,15 +21,18 @@ public class CustomAdapter extends ArrayAdapter<Task> implements Filterable {
 
     private TextView Stitle,Sdescriptionin;
      CustomAdapter(Context context){
-        super( context,R.layout.onetask, SharedList.list);
+    super( context,R.layout.onetask, SharedList.list);
         con = context;
     }
 
     @NonNull
     @Override
+    //I tried a 2 copies of the inflator , still the adapter would only update  if  you opened the keyboard
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext ());
+        //LayoutInflater inflater = (LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
              if (convertView == null){
+
              convertView = inflater.inflate(R.layout.onetask,parent,false);}
              Stitle = (TextView)convertView.findViewById(R.id.Stitlein);
              Stitle.setText(SharedList.list.get(position).getTitle ());
@@ -36,6 +40,8 @@ public class CustomAdapter extends ArrayAdapter<Task> implements Filterable {
              Sdescriptionin.setText(SharedList.list.get(position).getDescription ());
             return convertView;
     }
+    //It will bring back "filter" for the search bar
+
     public Filter getFilter(){
          if (filter==null){
 
@@ -44,7 +50,14 @@ public class CustomAdapter extends ArrayAdapter<Task> implements Filterable {
 
          return filter;
     }
-    //inner class
+    /*The inner class:"CustomFilter" to search for a task.
+    "constraint" is the input that I'm looking for.
+    "filterlist" is the answer is empty and the answer if we found nothing.
+    "filter" will check every value that contains the "constraint" from the "Sheared list"
+    then it will update hand to the MainActivity
+
+
+*/
     class CustomFilter extends Filter{
 
 

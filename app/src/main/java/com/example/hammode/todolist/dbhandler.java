@@ -3,20 +3,19 @@ package com.example.hammode.todolist;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 
+// My controller takes care of the data and hand it to the Main Activity
 public class dbhandler extends AppCompatActivity {
     FirebaseFirestore db;
-    protected void Loader() {
+    //Downloads the data from the database and by filling the "Shared list"
+        protected void Loader() {
         SharedList.list.clear();
         com.google.android.gms.tasks.Task<QuerySnapshot> querySnapshotTask = db.collection("Todo").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -34,6 +33,7 @@ public class dbhandler extends AppCompatActivity {
                 });
 
     }
+    // Creates a map and fill it with the user input then assign a random Id for the task int the Firebase
     protected void add (String Title , String description){
         String Id = UUID.randomUUID ().toString ();
         HashMap<String,Object> todo = new HashMap<>();
@@ -42,10 +42,12 @@ public class dbhandler extends AppCompatActivity {
         todo.put("description" ,description);
         db.collection("Todo").document(Id).set(todo);
     }
+    // Delete a task by removing the Id
     protected void Delete (int order){
         db.collection ( "Todo" ).document (SharedList.list.get ( order ).getId ()).
                 delete ();
             }
+            // Comparator can sort the Sheared list by the Title of 2 tasks
     public static Comparator<Task> TitleComparator = new Comparator<Task> () {
 
         public int compare(Task t1, Task t2) {
@@ -54,7 +56,7 @@ public class dbhandler extends AppCompatActivity {
             return Title1.compareTo ( Title2 );}
 
     };
-
+    // Comparator can sort the Sheared list by Comparing the Description of 2 tasks
     public static Comparator<Task> DescriptionComparator = new Comparator<Task> () {
 
         public int compare(Task t1, Task t2) {

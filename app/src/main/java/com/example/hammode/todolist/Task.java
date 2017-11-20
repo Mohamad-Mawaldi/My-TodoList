@@ -1,10 +1,6 @@
 package com.example.hammode.todolist;
 
-import java.util.Comparator;
-
-/**
- * Created by Hammode on 10/30/17.
- */
+//A model for my ArrayList
 
 public class Task {
     private String Title;
